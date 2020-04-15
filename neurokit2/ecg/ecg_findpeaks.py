@@ -549,7 +549,6 @@ def _ecg_findpeaks_engzee(signal, sampling_rate=1000):
     - C. Zeelenberg, A single scan algorithm for QRS detection and feature extraction, IEEE Comp. in Cardiology, vol. 6, pp. 37-42, 1979
     - A. Lourenco, H. Silva, P. Leite, R. Lourenco and A. Fred, "Real Time Electrocardiogram Segmentation for Finger Based ECG Biometrics", BIOSIGNALS 2012, pp. 49-54, 2012.
     """
-    engzee_fake_delay = 0
 
     diff = np.zeros(len(signal))
     for i in range(4, len(diff)):
@@ -567,7 +566,6 @@ def _ecg_findpeaks_engzee(signal, sampling_rate=1000):
 
     M = 0
     M_list = []
-    neg_m = []
     MM = []
     M_slope = np.linspace(1.0, 0.6, ms1200-ms200)
 
@@ -611,7 +609,6 @@ def _ecg_findpeaks_engzee(signal, sampling_rate=1000):
             M = 0.6 * np.mean(MM)
 
         M_list.append(M)
-        neg_m.append(-M)
 
         if not QRS and low_pass[i] > M:
             QRS.append(i)
@@ -644,7 +641,7 @@ def _ecg_findpeaks_engzee(signal, sampling_rate=1000):
 
         if counter > neg_threshold:
             unfiltered_section = signal[thi_list[-1] - int(0.01 * sampling_rate):i]
-            r_peaks.append(engzee_fake_delay + np.argmax(unfiltered_section) + thi_list[-1] - int(0.01 * sampling_rate))
+            r_peaks.append(np.argmax(unfiltered_section) + thi_list[-1] - int(0.01 * sampling_rate))
             counter = 0
             thi = False
             thf = False
